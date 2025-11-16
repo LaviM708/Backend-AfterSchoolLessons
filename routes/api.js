@@ -7,23 +7,17 @@ function createApiRouter(db) {
   const lessonsCollection = db.collection('lessons');
   const ordersCollection = db.collection('orders');
 
-  // ---- GET /api/lessons ----
-  router.get('/lessons', async (req, res) => {
+    // ---- GET /api/lessons ----
+    router.get('/lessons', async (req, res) => {
     try {
-      const id = req.params.id; // get the id from URL
-      const lesson = await lessonsCollection.findOne({ _id: new ObjectId(id) });
-      
-      if (!lesson) {
-      return res.status(404).json({ error: "Lesson not found" });
-      }
-
-      res.json(lesson);
+        // find ALL lessons and convert cursor to array
+        const lessons = await lessonsCollection.find({}).toArray();
+        res.json(lessons); 
     } catch (err) {
-      console.error('Error getting lessons:', err);
-      res.status(500).json({ error: 'Failed to fetch lessons' });
+        console.error('Error getting lessons:', err);
+        res.status(500).json({ error: 'Failed to fetch lessons' });
     }
-  });
-
+    });
 
   //POST an order 
     router.post("/order", async (req, res) => {

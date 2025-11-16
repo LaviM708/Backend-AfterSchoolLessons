@@ -1,3 +1,4 @@
+require('dotenv').config();
 // server.js
 const express = require('express');
 const cors = require('cors');
@@ -6,7 +7,6 @@ const { MongoClient, ObjectId } = require('mongodb');
 const createApiRouter = require('./routes/api');
 
 const app = express();
-const PORT = 3000; // backend will run on http://localhost:3000
 
 app.use(cors());
 app.use(express.json());
@@ -20,7 +20,9 @@ app.use((req, res, next) => {
 });
 
 // 1) MongoDB connection
-const uri = 'mongodb+srv://LavishaB:87iJp5I4ZRz2Uvr8@cluster0.xcknfis.mongodb.net/?appName=Cluster0';
+const PORT = process.env.PORT || 3000;
+const uri = process.env.MONGODB_URI;
+
 const client = new MongoClient(uri);
 
 app.use("/images", express.static("images"));
