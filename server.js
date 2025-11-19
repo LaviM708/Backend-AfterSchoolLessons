@@ -8,7 +8,7 @@ const createApiRouter = require('./routes/api');
 
 const app = express();
 
-app.use(cors());
+app.use(cors()); // allow Vue app ( github pages) to call the API
 app.use(express.json());
 
 //Middleware

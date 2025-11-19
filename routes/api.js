@@ -61,6 +61,33 @@ function createApiRouter(db) {
         }
     });
 
+    //PUT - update ANY fields in a lesson
+    router.put("/lesson/:id", async (req, res) => {
+        try {
+            const id = req.params.id;
+            const updateData = req.body;
+
+            // dont allow id to be change
+            if (updateData._id) {
+                delete updateData._id;
+            }
+
+            const result = await lessonsCollection.updateOne(
+                { _id: new ObjectId(id) },
+                { $set: updateData }
+            );
+
+            if (result.matchedCount == 0) {
+                return res.status(404).json({ error: "Lesson not found" });
+            }
+
+            res.json({ message: "Lesson updated successfully!", updatedFields: updateData });
+        } catch (err) {
+            console.error("Error updating lesson:", err);
+            res.status(500).json({ error: "Failed to update lesson"});
+        }
+    });
+
   return router;
 }
 
