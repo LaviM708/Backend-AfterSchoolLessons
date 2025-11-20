@@ -88,6 +88,43 @@ function createApiRouter(db) {
         }
     });
 
+    // GET - search 
+    router.get('/search', async (req, res) => {
+        try{
+            // read ?q from the URl
+            const q = (req.query.q || '').trim();
+
+            // If user didn't type anything, return all lessons
+            if (!q) {
+                const allLessons = await lessonsCollection.find({}).toArray();
+                return res.json(allLessons);
+            }
+
+            // Text search (subject, location) -  i = case-insensitive
+            const regex = new RegExp(q, 'i');
+
+            const orConditions = [ // list of conditions
+                { topic: regex },
+                { location: regex },
+            ];
+
+            // If q is a number , search price and space
+            if (!isNaN(q)) {
+                const num = Number(q);
+                orConditions.push({ price: num });
+                orConditions.push({ space: num });
+            }
+
+            // ask MongoDB to find any lesson that matches at least on condition
+            const results = await lessonsCollection.find({ $or: orConditions }).toArray();
+
+            res.json(results);
+        } catch (err) {
+            console.error('Error in /search', err);
+            res.status(500).json({ error: 'Failed to search lessons' });
+        }
+    })
+
   return router;
 }
 
