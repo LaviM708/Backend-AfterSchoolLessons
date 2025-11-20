@@ -10,7 +10,7 @@ function createApiRouter(db) {
     // ---- GET /api/lessons ----
     router.get('/lessons', async (req, res) => {
     try {
-        // find ALL lessons and convert cursor to array
+        // get all lessons from MongoDB and send as JSON
         const lessons = await lessonsCollection.find({}).toArray();
         res.json(lessons); 
     } catch (err) {
@@ -117,7 +117,6 @@ function createApiRouter(db) {
 
             // ask MongoDB to find any lesson that matches at least on condition
             const results = await lessonsCollection.find({ $or: orConditions }).toArray();
-
             res.json(results);
         } catch (err) {
             console.error('Error in /search', err);
