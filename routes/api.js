@@ -23,8 +23,16 @@ function createApiRouter(db) {
     router.post("/order", async (req, res) => {
         try {
             const order = req.body; // order data send from frontend
+
+            order.orderNumber = Math.floor(100000 + Math.random() * 900000);
+
             const result = await ordersCollection.insertOne(order); // send that order into order Collection
-            res.json({ message: 'Order saved!', orderId: result.insertedId});
+
+            res.json({ 
+                message: 'Order saved!', 
+                orderId: result.insertedId,
+                orderNumber: order.orderNumber
+            });
         } catch (err) {
             console.error('Error saving order: ', err);
             res.status(500).json({ error: 'Failed to save order'});
