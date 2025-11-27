@@ -29,14 +29,11 @@ app.use("/images", express.static("images"));
 
 async function startServer() {
   try {
-    // connect to MongoDB
     await client.connect();
-    console.log('✅ Connected to MongoDB Atlas');
+    console.log('Connected to MongoDB Atlas');
 
-    // name of the database and collection you created in Atlas
     const db = client.db("afterSchoolLessons");
 
-    // use the router, give it our db
     const apiRouter = createApiRouter(db);
     app.use('/api', apiRouter);
 
@@ -44,7 +41,6 @@ async function startServer() {
         res.status(404).json({ error: "Resource not found"});
     });
 
-    //Start server
     app.listen(PORT, () => {
       console.log(`Backend running at http://localhost:${PORT}`);
     });

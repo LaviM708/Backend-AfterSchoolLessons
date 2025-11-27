@@ -7,7 +7,7 @@ function createApiRouter(db) {
   const lessonsCollection = db.collection('lessons');
   const ordersCollection = db.collection('orders');
 
-    // ---- GET /api/lessons ----
+    //GET /api/lessons
     router.get('/lessons', async (req, res) => {
     try {
         // get all lessons from MongoDB and send as JSON
@@ -108,22 +108,19 @@ function createApiRouter(db) {
                 return res.json(allLessons);
             }
 
-            // Text search (subject, location) -  i = case-insensitive
             const regex = new RegExp(q, 'i');
 
-            const orConditions = [ // list of conditions
+            const orConditions = [
                 { topic: regex },
                 { location: regex },
             ];
 
-            // If q is a number , search price and space
             if (!isNaN(q)) {
                 const num = Number(q);
                 orConditions.push({ price: num });
                 orConditions.push({ space: num });
             }
 
-            // ask MongoDB to find any lesson that matches at least on condition
             const results = await lessonsCollection.find({ $or: orConditions }).toArray();
             res.json(results);
         } catch (err) {
