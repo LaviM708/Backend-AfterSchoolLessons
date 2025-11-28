@@ -99,7 +99,6 @@ function createApiRouter(db) {
     // GET - search 
     router.get('/search', async (req, res) => {
         try{
-            // read ?q from the URl
             const q = (req.query.q || '').trim();
 
             // If user didn't type anything, return all lessons
